@@ -8,7 +8,7 @@ Welcome to **Apu Cookbook**, a Windows desktop application that allows you to cr
 - **Organize Recipes by Category**: Easily categorize recipes by types such as Meat, Vegan, Pasta, etc.
 - **View Recipe List**: See a list of all your recipes, with details about ingredients and cooking instructions.
 - **Edit & Delete Recipes**: Modify existing recipes or delete those that you no longer need.
-- **Add Recipe Images**: Attach an image for each recipe to make it even more visually appealing! 🍷
+- **Add Recipe Images**: (Coming soon) Attach an image for each recipe to make it even more visually appealing! 🍷
 - **Simple UI**: Easy navigation with a clear and simple interface.
 
 ## Tech Stack 🛠️
@@ -26,7 +26,7 @@ This project is developed using the following technologies:
 2. **Add Recipe**: Once you're done entering all the details, click the **"Add Recipe"** button to save it in the database.
 3. **View Recipes**: You can view all your added recipes in the recipe list section. 📃
 4. **Edit & Delete**: Select any recipe from the list to edit or delete.
-5. **Attach an Image**: You can upload a photo of your culinary creation to add more flavor to your cookbook!
+5. **Attach an Image**: (Coming soon) You will be able to upload a photo of your culinary creation to add more flavor to your cookbook!
 
 ## Running the Project 🏯
 
@@ -56,11 +56,9 @@ Feel free to contribute to this project by reporting bugs, suggesting features, 
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Contact 📧
+Happy cooking and coding! 📚💙🍳
 
-For more information, you can reach out to me:
 
-- André Lang 🌐 - [Email Me](mailto:andrelang@example.com)
 
 Happy cooking and coding! 📚💙🍳
 
