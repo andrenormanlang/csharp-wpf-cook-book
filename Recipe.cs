@@ -1,14 +1,24 @@
 ﻿namespace CookBook
 {
+    /// <summary>
+    /// Represents a recipe with a name, category, ingredients, and instructions.
+    /// </summary>
     public class Recipe
     {
+        public int Id { get; set; }
         private string name;
         private FoodCategory category;
         private string[] ingredients;
         private string instructions;
         private int numOfIngredients;
         private readonly int maxIngredients;
+        private string imagePath;
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Recipe"/> class with a specified maximum number of ingredients.
+        /// </summary>
+        /// <param name="maxIngredients">The maximum number of ingredients allowed for the recipe.</param>
         public Recipe(int maxIngredients)
         {
             this.maxIngredients = maxIngredients;
@@ -17,7 +27,10 @@
             instructions = string.Empty;
         }
 
-        // Copy constructor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Recipe"/> class by copying an existing recipe.
+        /// </summary>
+        /// <param name="other">The recipe to copy.</param>
         public Recipe(Recipe other)
         {
             this.maxIngredients = other.maxIngredients;
@@ -29,6 +42,10 @@
             this.instructions = other.instructions;
         }
 
+        /// <summary>
+        /// Gets or sets the name of the recipe.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown when the recipe name is empty or whitespace.</exception>
         public string Name
         {
             get { return name; }
@@ -40,18 +57,29 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the category of the recipe.
+        /// </summary>
         public FoodCategory Category
         {
             get { return category; }
             set { category = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the instructions for the recipe.
+        /// </summary>
         public string Instructions
         {
             get { return instructions; }
             set { instructions = value ?? string.Empty; }
         }
 
+        /// <summary>
+        /// Adds a new ingredient to the recipe.
+        /// </summary>
+        /// <param name="ingredient">The ingredient to add.</param>
+        /// <returns>True if the ingredient was added; false if the recipe is full or the ingredient is invalid.</returns>
         public bool AddIngredient(string ingredient)
         {
             if (numOfIngredients >= maxIngredients)
@@ -64,6 +92,10 @@
             return true;
         }
 
+        /// <summary>
+        /// Gets the list of ingredients in the recipe.
+        /// </summary>
+        /// <returns>An array of ingredients currently in the recipe.</returns>
         public string[] GetIngredients()
         {
             string[] result = new string[numOfIngredients];
@@ -71,27 +103,51 @@
             return result;
         }
 
+
+
+        /// <summary>
+        /// Gets the number of ingredients currently in the recipe.
+        /// </summary>
         public int NumOfIngredients
         {
-            get { return numOfIngredients; }
+            get
+            {
+                // Return the number of non-null ingredients currently in the array
+                return ingredients.Count(ingredient => !string.IsNullOrWhiteSpace(ingredient));
+            }
         }
 
+        /// <summary>
+        /// Gets the maximum number of ingredients allowed in the recipe.
+        /// </summary>
         public int MaxIngredients
         {
             get { return maxIngredients; }
         }
 
+        /// <summary>
+        /// Determines whether the recipe has any ingredients.
+        /// </summary>
+        /// <returns>True if the recipe has at least one ingredient; otherwise, false.</returns>
         public bool HasIngredients()
         {
             return numOfIngredients > 0;
         }
 
+        /// <summary>
+        /// Clears all ingredients from the recipe.
+        /// </summary>
         public void ClearIngredients()
         {
             Array.Clear(ingredients, 0, ingredients.Length);
             numOfIngredients = 0;
         }
 
+        /// <summary>
+        /// Removes an ingredient from the recipe by its index.
+        /// </summary>
+        /// <param name="index">The index of the ingredient to remove.</param>
+        /// <returns>True if the ingredient was removed; false if the index is invalid.</returns>
         public bool RemoveIngredient(int index)
         {
             if (index < 0 || index >= numOfIngredients)
@@ -106,7 +162,12 @@
             return true;
         }
 
-        // Method to update an ingredient by index
+        /// <summary>
+        /// Updates an ingredient at the specified index with a new value.
+        /// </summary>
+        /// <param name="index">The index of the ingredient to update.</param>
+        /// <param name="newIngredient">The new ingredient value.</param>
+        /// <returns>True if the ingredient was updated; false if the index is invalid or the new ingredient is empty.</returns>
         public bool UpdateIngredient(int index, string newIngredient)
         {
             if (index < 0 || index >= numOfIngredients || string.IsNullOrWhiteSpace(newIngredient))
@@ -115,62 +176,19 @@
             ingredients[index] = newIngredient.Trim();
             return true;
         }
-    }
 
-    public class RecipeManager
-    {
-        private readonly Recipe[] recipeList;
-        private int numOfElems;
-
-        public RecipeManager(int maxRecipes)
+        /// <summary>
+        /// Gets or sets the path of the image associated with the recipe.
+        /// </summary>
+        public string ImagePath
         {
-            recipeList = new Recipe[maxRecipes];
-            numOfElems = 0;
+            get { return imagePath; }
+            set { imagePath = value; }
         }
 
-        public int NumOfRecipes
-        {
-            get { return numOfElems; }
-        }
-
-        public bool AddRecipe(Recipe recipe)
-        {
-            if (numOfElems >= recipeList.Length)
-                return false;
-
-            if (recipe == null)
-                return false;
-
-            recipeList[numOfElems] = new Recipe(recipe); // Create a copy
-            numOfElems++;
-            return true;
-        }
-
-        public Recipe GetRecipe(int index)
-        {
-            if (index < 0 || index >= numOfElems)
-                return null;
-
-            return recipeList[index];
-        }
-
-        public void RemoveRecipe(int index)
-        {
-            if (index < 0 || index >= numOfElems)
-                return;
-
-            recipeList[index] = null;
-            MoveElementsOneStepToLeft(index);
-            numOfElems--;
-        }
-
-        private void MoveElementsOneStepToLeft(int index)
-        {
-            for (int i = index + 1; i < recipeList.Length; i++)
-            {
-                recipeList[i - 1] = recipeList[i];
-                recipeList[i] = null;
-            }
-        }
+        /// <summary>
+        /// Gets or sets the binary data of the image associated with the recipe.
+        /// </summary>
+        public byte[]? ImageData { get; set; }
     }
 }

@@ -1,13 +1,20 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Microsoft.VisualBasic; 
+using Microsoft.VisualBasic;
 
 namespace CookBook
 {
+    /// <summary>
+    /// A form that allows users to view and edit the details of a recipe, such as ingredients and instructions.
+    /// </summary>
     public partial class FormRecipeDetails : Window
     {
         private Recipe recipe;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FormRecipeDetails"/> class with a copy of the current recipe.
+        /// </summary>
+        /// <param name="currentRecipe">The recipe to be edited or viewed.</param>
         public FormRecipeDetails(Recipe currentRecipe)
         {
             InitializeComponent();
@@ -15,12 +22,15 @@ namespace CookBook
             // Create a copy of the passed recipe
             recipe = new Recipe(currentRecipe);
 
-            // Set the window title with recipe name
+            // Set the window title with the recipe name
             UpdateWindowTitle();
 
             InitializeFormData();
         }
 
+        /// <summary>
+        /// Updates the window title with the recipe name.
+        /// </summary>
         private void UpdateWindowTitle()
         {
             if (!string.IsNullOrEmpty(recipe.Name))
@@ -33,11 +43,17 @@ namespace CookBook
             }
         }
 
+        /// <summary>
+        /// Gets the edited recipe from the form.
+        /// </summary>
         public Recipe Recipe
         {
             get { return recipe; }
         }
 
+        /// <summary>
+        /// Initializes the form data with the current recipe details.
+        /// </summary>
         private void InitializeFormData()
         {
             txtInstructions.Text = recipe.Instructions;
@@ -46,6 +62,9 @@ namespace CookBook
             btnDelete.IsEnabled = false;
         }
 
+        /// <summary>
+        /// Refreshes the ingredients list with the current recipe ingredients.
+        /// </summary>
         private void RefreshIngredientsList()
         {
             lstIngredients.Items.Clear();
@@ -59,6 +78,9 @@ namespace CookBook
             txtIngredientCount.Text = recipe.NumOfIngredients.ToString();
         }
 
+        /// <summary>
+        /// Handles the click event for adding a new ingredient to the recipe.
+        /// </summary>
         private void AddIngredient_Click(object sender, RoutedEventArgs e)
         {
             string ingredient = txtIngredient.Text.Trim();
@@ -83,6 +105,9 @@ namespace CookBook
             }
         }
 
+        /// <summary>
+        /// Handles the click event for editing the selected ingredient.
+        /// </summary>
         private void EditIngredient_Click(object sender, RoutedEventArgs e)
         {
             if (lstIngredients.SelectedItem == null)
@@ -112,6 +137,9 @@ namespace CookBook
             }
         }
 
+        /// <summary>
+        /// Handles the click event for deleting the selected ingredient from the recipe.
+        /// </summary>
         private void DeleteIngredient_Click(object sender, RoutedEventArgs e)
         {
             if (lstIngredients.SelectedItem == null)
@@ -137,6 +165,9 @@ namespace CookBook
             }
         }
 
+        /// <summary>
+        /// Handles the selection changed event in the ingredients list, enabling or disabling the edit and delete buttons.
+        /// </summary>
         private void lstIngredients_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             bool isItemSelected = lstIngredients.SelectedItem != null;
@@ -144,6 +175,9 @@ namespace CookBook
             btnDelete.IsEnabled = isItemSelected;
         }
 
+        /// <summary>
+        /// Handles the click event for confirming the recipe details and saving the instructions.
+        /// </summary>
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             // Validate that we have at least one ingredient
@@ -157,7 +191,6 @@ namespace CookBook
 
                 if (result == MessageBoxResult.Yes)
                 {
-                    
                     txtIngredient.Focus();
                     return;
                 }
@@ -165,14 +198,15 @@ namespace CookBook
 
             // Save instructions
             recipe.Instructions = txtInstructions.Text;
-
-            
+            this.DialogResult = true;
         }
 
+        /// <summary>
+        /// Handles the click event for canceling the form and discarding changes.
+        /// </summary>
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
         }
     }
 }
-

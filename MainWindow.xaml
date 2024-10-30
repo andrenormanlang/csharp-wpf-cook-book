@@ -45,7 +45,7 @@
                     <GridView>
                         <GridViewColumn Header="Recipe Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
                         <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Category}" Width="100"/>
-                        <GridViewColumn Header="Ingredients Count" DisplayMemberBinding="{Binding NumOfIngredients}" Width="50"/>
+                        <GridViewColumn Header="Ingredients Count" DisplayMemberBinding="{Binding NumOfIngredients}" Width="100"/>
                     </GridView>
                 </ListView.View>
                 <ListView.Resources>
@@ -64,10 +64,12 @@
         <Button Content="Clear Input" Width="90" HorizontalAlignment="Left" Margin="270,519,0,0" VerticalAlignment="Top" Click="ClearInputButton_Click" Height="30"/>
 
         <!-- Add Image Section -->
+        <!-- Add Image Section -->
         <Border HorizontalAlignment="Center" VerticalAlignment="Top" Width="235" Height="186" Margin="0,19,0,0" BorderBrush="Gray" BorderThickness="1" Grid.Column="1">
-            <Image x:Name="imgRecipeImage" Stretch="Uniform" Margin="-285,158,290,-159"/>
+            <Image x:Name="imgRecipeImage" Stretch="Uniform" />
         </Border>
         <Button Content="Add Image" Width="235" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="52,214,0,0" Click="AddImageButton_Click" Grid.Column="1"/>
+
 
         <!-- Recipe Details Section -->
         <GroupBox Header="" 
@@ -89,12 +91,7 @@
                    FontSize="12"
                    Margin="5"
                    LineHeight="20"/>
-    </ScrollViewer>
+            </ScrollViewer>
         </GroupBox>
-
-
-
-
     </Grid>
 </Window>
-
