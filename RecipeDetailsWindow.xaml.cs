@@ -5,7 +5,7 @@ using Microsoft.VisualBasic;
 namespace CookBook
 {
     /// <summary>
-    /// A form that allows users to view and edit the details of a recipe, such as ingredients and instructions.
+    /// Interaction logic for FormRecipeDetails.xaml
     /// </summary>
     public partial class FormRecipeDetails : Window
     {
@@ -29,6 +29,25 @@ namespace CookBook
         }
 
         /// <summary>
+        /// Gets the edited recipe from the form.
+        /// </summary>
+        public Recipe Recipe
+        {
+            get { return recipe; }
+        }
+
+        /// <summary>
+        /// Updates the recipe instructions whenever the text changes.
+        /// </summary>
+        private void txtInstructions_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtInstructions != null)
+            {
+                recipe.Instructions = txtInstructions.Text;
+            }
+        }
+
+        /// <summary>
         /// Updates the window title with the recipe name.
         /// </summary>
         private void UpdateWindowTitle()
@@ -41,14 +60,6 @@ namespace CookBook
             {
                 this.Title = "Add ingredients";
             }
-        }
-
-        /// <summary>
-        /// Gets the edited recipe from the form.
-        /// </summary>
-        public Recipe Recipe
-        {
-            get { return recipe; }
         }
 
         /// <summary>
@@ -180,7 +191,6 @@ namespace CookBook
         /// </summary>
         private void OK_Click(object sender, RoutedEventArgs e)
         {
-            // Validate that we have at least one ingredient
             if (!recipe.HasIngredients())
             {
                 var result = MessageBox.Show(
@@ -196,7 +206,6 @@ namespace CookBook
                 }
             }
 
-            // Save instructions
             recipe.Instructions = txtInstructions.Text;
             this.DialogResult = true;
         }

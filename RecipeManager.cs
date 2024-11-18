@@ -119,6 +119,62 @@ namespace CookBook
                 }
             }
         }
+
+
+        /// <summary>
+        /// Updates an existing recipe in the database.
+        /// </summary>
+        /// <param name="recipe">The updated recipe object.</param>
+        /// <returns>True if the recipe was updated successfully; otherwise false.</returns>
+       public bool UpdateRecipe(Recipe recipe)
+        {
+            using (MySqlConnection conn = new MySqlConnection(connectionString))
+            {
+                try
+                {
+                    conn.Open();
+
+                    // Update the recipe
+                    string sqlUpdateRecipe = "UPDATE recipes SET name = @name, category = @category, instructions = @instructions, image = @image WHERE id = @id";
+                    using (MySqlCommand cmd = new MySqlCommand(sqlUpdateRecipe, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@name", recipe.Name);
+                        cmd.Parameters.AddWithValue("@category", recipe.Category.ToString());
+                        cmd.Parameters.AddWithValue("@instructions", recipe.Instructions);
+                        cmd.Parameters.AddWithValue("@image", recipe.ImageData);
+                        cmd.Parameters.AddWithValue("@id", recipe.Id);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Remove old ingredients
+                    string sqlDeleteIngredients = "DELETE FROM ingredients WHERE recipe_id = @recipe_id";
+                    using (MySqlCommand cmd = new MySqlCommand(sqlDeleteIngredients, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@recipe_id", recipe.Id);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    // Add updated ingredients
+                    foreach (string ingredient in recipe.GetIngredients())
+                    {
+                        string sqlInsertIngredient = "INSERT INTO ingredients (recipe_id, ingredient) VALUES (@recipe_id, @ingredient)";
+                        using (MySqlCommand cmd = new MySqlCommand(sqlInsertIngredient, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@recipe_id", recipe.Id);
+                            cmd.Parameters.AddWithValue("@ingredient", ingredient);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return false;
+                }
+            }
+        }
         private void LoadIngredientsForRecipe(Recipe recipe, MySqlConnection conn)
         {
             string sqlIngredients = "SELECT ingredient FROM ingredients WHERE recipe_id = @recipe_id";

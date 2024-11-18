@@ -92,7 +92,7 @@ namespace CookBook
         /// </summary>
         private void AddRecipeButton_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(currRecipe.Name))
+            if (string.IsNullOrWhiteSpace(txtRecipeName.Text))
             {
                 MessageBox.Show("Please enter a recipe name.", "Input Required",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -106,21 +106,46 @@ namespace CookBook
                 return;
             }
 
-            // Add the recipe to the manager
-            if (recipeManager.AddRecipe(currRecipe))
+            if (currRecipe.Id > 0)
             {
-                // Update the ListBox
-                RefreshRecipeList();
+                // Update existing recipe
+                currRecipe.Name = txtRecipeName.Text;
+                currRecipe.Category = (FoodCategory)cmbCategory.SelectedItem;
+                currRecipe.Instructions = txtInstructions.Text;
 
-                // Clear the form and create a new current recipe
-                ClearForm();
-                currRecipe = new Recipe(MaxNumOfIngredients);
+                if (recipeManager.UpdateRecipe(currRecipe))
+                {
+                    MessageBox.Show("Recipe updated successfully.", "Success",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update the recipe.", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
-                MessageBox.Show("Cannot add more recipes. Maximum limit reached.",
-                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Add new recipe
+                currRecipe.Name = txtRecipeName.Text;
+                currRecipe.Category = (FoodCategory)cmbCategory.SelectedItem;
+
+                if (recipeManager.AddRecipe(currRecipe))
+                {
+                    MessageBox.Show("Recipe added successfully.", "Success",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Cannot add more recipes. Maximum limit reached.",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
+
+            // Refresh the list and clear the form
+            RefreshRecipeList();
+            ClearForm();
+            currRecipe = new Recipe(MaxNumOfIngredients);
         }
 
         /// <summary>
@@ -133,16 +158,23 @@ namespace CookBook
                 var selectedRecipe = recipeManager.GetRecipe(lstRecipes.SelectedIndex);
                 if (selectedRecipe != null)
                 {
-                    // Display ingredients and instructions in the text block
+                    // Update current recipe reference
+                    currRecipe = new Recipe(selectedRecipe); // Use copy constructor to avoid modifying the original before confirmation
+
+                    // Populate the form fields with the selected recipe's data
+                    txtRecipeName.Text = currRecipe.Name;
+                    cmbCategory.SelectedItem = currRecipe.Category;
+
+                    // Load instructions and ingredients into the instructions TextBox
                     txtInstructions.Text = $"INGREDIENTS\n" +
-                                           $"{string.Join("\n", selectedRecipe.GetIngredients())}\n\n" +
+                                           $"{string.Join("\n", currRecipe.GetIngredients())}\n\n" +
                                            $"INSTRUCTIONS\n" +
-                                           $"{selectedRecipe.Instructions}";
+                                           $"{currRecipe.Instructions}";
 
                     // Load the image if available
-                    if (selectedRecipe.ImageData != null)
+                    if (currRecipe.ImageData != null)
                     {
-                        using (var ms = new MemoryStream(selectedRecipe.ImageData))
+                        using (var ms = new MemoryStream(currRecipe.ImageData))
                         {
                             var bitmap = new BitmapImage();
                             bitmap.BeginInit();
@@ -169,18 +201,42 @@ namespace CookBook
         {
             if (lstRecipes.SelectedIndex >= 0)
             {
-                var selectedRecipe = recipeManager.GetRecipe(lstRecipes.SelectedIndex);
-                if (selectedRecipe != null)
+                var selectedRecipeIndex = lstRecipes.SelectedIndex;
+
+                // Update current recipe with the modified data
+                if (string.IsNullOrWhiteSpace(txtRecipeName.Text))
                 {
-                    // Load the selected recipe into the form
-                    currRecipe = new Recipe(selectedRecipe); // Use copy constructor
-                    txtRecipeName.Text = currRecipe.Name;
-                    cmbCategory.SelectedItem = currRecipe.Category;
+                    MessageBox.Show("Recipe name cannot be empty.", "Input Required",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Update the current recipe's properties
+                currRecipe.Name = txtRecipeName.Text;
+                currRecipe.Category = (FoodCategory)cmbCategory.SelectedItem;
+                currRecipe.Instructions = txtInstructions.Text; // This should contain only the instructions text
+
+                // Update the database
+                if (recipeManager.UpdateRecipe(currRecipe))
+                {
+                    MessageBox.Show("Recipe updated successfully.", "Success",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Refresh the recipe list to reflect changes
+                    RefreshRecipeList();
+
+                    // Reselect the updated recipe in the ListBox
+                    lstRecipes.SelectedIndex = selectedRecipeIndex;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update the recipe.", "Error",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             else
             {
-                MessageBox.Show("Please select a recipe to edit.", "Selection Required",
+                MessageBox.Show("Please select a recipe to change.", "Selection Required",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

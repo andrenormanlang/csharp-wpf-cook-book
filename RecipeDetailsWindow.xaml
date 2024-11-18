@@ -73,7 +73,7 @@
                      AcceptsReturn="True"
                      VerticalScrollBarVisibility="Auto"
                      Background="#f0f0f0"
-                     Margin="0,0,0,10" HorizontalAlignment="Left" Width="375"/>
+                     Margin="0,0,0,10" HorizontalAlignment="Left" Width="375" TextChanged="txtInstructions_TextChanged"/>
 
             <!-- OK/Cancel Buttons -->
             <StackPanel Grid.Row="2" 

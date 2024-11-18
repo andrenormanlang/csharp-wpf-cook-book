@@ -1,10 +1,14 @@
-﻿namespace CookBook
+﻿using System;
+using System.Linq;
+
+namespace CookBook
 {
     /// <summary>
     /// Represents a recipe with a name, category, ingredients, and instructions.
     /// </summary>
     public class Recipe
     {
+        // Properties for the Recipe
         public int Id { get; set; }
         private string name;
         private FoodCategory category;
@@ -13,7 +17,6 @@
         private int numOfIngredients;
         private readonly int maxIngredients;
         private string imagePath;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Recipe"/> class with a specified maximum number of ingredients.
@@ -33,13 +36,16 @@
         /// <param name="other">The recipe to copy.</param>
         public Recipe(Recipe other)
         {
+            this.Id = other.Id;
             this.maxIngredients = other.maxIngredients;
             this.ingredients = new string[maxIngredients];
-            Array.Copy(other.ingredients, this.ingredients, other.ingredients.Length);
+            Array.Copy(other.ingredients, this.ingredients, other.numOfIngredients);
             this.numOfIngredients = other.numOfIngredients;
             this.name = other.name;
             this.category = other.category;
             this.instructions = other.instructions;
+            this.ImageData = other.ImageData;
+            this.imagePath = other.imagePath;
         }
 
         /// <summary>
@@ -76,6 +82,11 @@
         }
 
         /// <summary>
+        /// Gets or sets the binary data of the image associated with the recipe.
+        /// </summary>
+        public byte[]? ImageData { get; set; }
+
+        /// <summary>
         /// Adds a new ingredient to the recipe.
         /// </summary>
         /// <param name="ingredient">The ingredient to add.</param>
@@ -103,36 +114,21 @@
             return result;
         }
 
-
-
         /// <summary>
         /// Gets the number of ingredients currently in the recipe.
         /// </summary>
-        public int NumOfIngredients
-        {
-            get
-            {
-                // Return the number of non-null ingredients currently in the array
-                return ingredients.Count(ingredient => !string.IsNullOrWhiteSpace(ingredient));
-            }
-        }
+        public int NumOfIngredients => numOfIngredients;
 
         /// <summary>
         /// Gets the maximum number of ingredients allowed in the recipe.
         /// </summary>
-        public int MaxIngredients
-        {
-            get { return maxIngredients; }
-        }
+        public int MaxIngredients => maxIngredients;
 
         /// <summary>
         /// Determines whether the recipe has any ingredients.
         /// </summary>
         /// <returns>True if the recipe has at least one ingredient; otherwise, false.</returns>
-        public bool HasIngredients()
-        {
-            return numOfIngredients > 0;
-        }
+        public bool HasIngredients() => numOfIngredients > 0;
 
         /// <summary>
         /// Clears all ingredients from the recipe.
@@ -187,8 +183,13 @@
         }
 
         /// <summary>
-        /// Gets or sets the binary data of the image associated with the recipe.
+        /// Generates a string representation of the recipe, including its name and category.
         /// </summary>
-        public byte[]? ImageData { get; set; }
+        /// <returns>A string representing the recipe's name and category.</returns>
+        public override string ToString()
+        {
+            return $"{Name} ({Category})";
+        }
     }
 }
+
