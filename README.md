@@ -1,6 +1,6 @@
-# Apu Cookbook by André Lang 🍽️
+# WPF Cookbook 🍽️
 
-Welcome to **Apu Cookbook**, a Windows desktop application that allows you to create, manage, and organize your favorite recipes in one place. With this intuitive and easy-to-use application, you'll be able to store ingredients, cooking instructions, and even images for all of your culinary creations. 🍴💅
+Welcome to **WPF Cookbook**, a Windows desktop application that allows you to create, manage, and organize your favorite recipes in one place. With this intuitive and easy-to-use application, you'll be able to store ingredients, cooking instructions, and even images for all of your culinary creations. 🍴💅
 
 ## Features 🌱
 
